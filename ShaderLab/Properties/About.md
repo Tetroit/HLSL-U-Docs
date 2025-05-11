@@ -28,8 +28,8 @@ Types:
 | [**Range**](./Range.md) | ```_VarName ("InspectorName", Range(min, max)) = 0.0``` |
 | [**Vector**](./Vector.md) | ```_VarName ("InspectorName", Vector) = (0.0, 0.0, 0.0, 1.0)``` |
 | [**Color**](./Color.md) | ```_VarName ("InspectorName", Color) = (0.0, 0.0, 0.0, 1.0)``` |
-| [**2D**](./Texture2D.md) |```_VarName ("InspectorName", 2D) = ""{}``` |
-| [**3D**](./Texture3D.md) | ```_VarName ("InspectorName", 3D) = ""{}``` |
-| [**2DArray**](./Texture2DArray.md) |```_VarName ("InspectorName", 2DArray) = ""{}``` |
+| [**2D Texture**](./Texture2D.md) |```_VarName ("InspectorName", 2D) = ""{}``` |
+| [**3D Texture**](./Texture3D.md) | ```_VarName ("InspectorName", 3D) = ""{}``` |
+| [**2D Texture Array**](./Texture2DArray.md) |```_VarName ("InspectorName", 2DArray) = ""{}``` |
 | [**Cube**](./Cubemap.md) |```_VarName ("InspectorName", Cube) = ""{}``` |
-| [**CubemapArray**](./CubemapArray.md) | ```_VarName ("InspectorName", CubeArray) = ""{}``` |
+| [**Cubemap Array**](./CubemapArray.md) | ```_VarName ("InspectorName", CubeArray) = ""{}``` |

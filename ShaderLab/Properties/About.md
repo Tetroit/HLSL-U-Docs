@@ -20,13 +20,16 @@ ShaderLab allows a lot of customization for properties from your materials.
 You can find more info about each element in this folder, or by references below
 
 Types:
-- [**Integer**](./Integer.md)
-- [**Float**](./Float.md)
-- [**Range**](./Range.md)
-- [**Vector**](./Vector.md)
-- [**Color**](./Color.md)
-- [**2D**](./Texture2D.md)
-- [**3D**](./Texture3D.md)
-- [**2DArray**](./Texture2DArray.md)
-- [**Cube**](./Cubemap.md)
-- [**CubemapArray**](./CubemapArray.md)
+
+| Type | Syntax |
+| --- | --- |
+| [**Integer**](./Integer.md) | ```_VarName ("InspectorName", Integer) = 0``` |
+| [**Float**](./Float.md) | ```_VarName ("InspectorName", Float) = 0.0``` |
+| [**Range**](./Range.md) | ```_VarName ("InspectorName", Range(min, max)) = 0.0``` |
+| [**Vector**](./Vector.md) | ```_VarName ("InspectorName", Vector) = (0.0, 0.0, 0.0, 1.0)``` |
+| [**Color**](./Color.md) | ```_VarName ("InspectorName", Color) = (0.0, 0.0, 0.0, 1.0)``` |
+| [**2D**](./Texture2D.md) |```_VarName ("InspectorName", 2D) = ""{}``` |
+| [**3D**](./Texture3D.md) | ```_VarName ("InspectorName", 3D) = ""{}``` |
+| [**2DArray**](./Texture2DArray.md) |```_VarName ("InspectorName", 2DArray) = ""{}``` |
+| [**Cube**](./Cubemap.md) |```_VarName ("InspectorName", Cube) = ""{}``` |
+| [**CubemapArray**](./CubemapArray.md) | ```_VarName ("InspectorName", CubeArray) = ""{}``` |

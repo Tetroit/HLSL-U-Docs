@@ -20,13 +20,13 @@ ShaderLab allows a lot of customization for properties from your materials.
 You can find more info about each element in this folder, or by references below
 
 Types:
-- **Integer**
+- [**Integer**](./Integer.md)
 - [**Float**](./Float.md)
-- **Range**
-- **Vector**
-- **Color**
-- **2D**
-- **3D**
-- **2DArray**
-- **Cube**
-- **CubemapArray**
+- [**Range**](./Range.md)
+- [**Vector**](./Vector.md)
+- [**Color**](./Color.md)
+- [**2D**](./Texture2D.md)
+- [**3D**](./Texture3D.md)
+- [**2DArray**](./Texture2DArray.md)
+- [**Cube**](./Cubemap.md)
+- [**CubemapArray**](./CubemapArray.md)

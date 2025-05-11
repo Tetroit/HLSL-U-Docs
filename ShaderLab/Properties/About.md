@@ -5,8 +5,8 @@
 ShaderLab allows a lot of customization for properties from your materials.
 ```C#
 [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
-//     |        \        |       \        |
-// Attributes   |        \      Type      \
+//     |        |        |       |        |
+// Attributes   |        |      Type      |
 //       Name in shader  |          Default value
 //                  Name in inspector
 ```

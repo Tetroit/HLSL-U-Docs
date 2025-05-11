@@ -1,6 +1,7 @@
-## Unity ShaderLab
+<h2 align="center">Unity ShaderLab</h2>
+
 **ShaderLab** is a marking language used by unity shaders. Its structure goes as follows:
-```C++
+```C#
 Shader "Your shader/Shader category"
 {
     Properties {...}
@@ -25,7 +26,7 @@ Shader "Your shader/Shader category"
 ```
 Here is a brief breakdown:
 - **Shader** is the general keyword indicating the beginning of the shader, followed by your shader name.  
-- **Properties** define which global variables will be used for the shader.
+- [**Properties**](./Properties/About.md) define which global variables will be used for the shader.
 - **SubShader** defines main structure of the shader code itself, you can have multiple SubShaders to accommodate for different hardware.
     - **Tags** allows to define the behaviour of the shader
     - **LOD (Level Of Detail)** indicates whether this SubShader should be used according to the level of detail of the object, you can create multiple same-purpose SubShaders but for different levels of details.  

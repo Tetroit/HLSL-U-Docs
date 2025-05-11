@@ -9,6 +9,7 @@ If you once looked into Unity's ShaderLab/HLSL/ documentation it almost surely r
 ```#pragma multi_compile```?
 Whats the difference? Which keywords can I use?"
 - "Can I include other files into shader? Where can I get Unity's HLSL source code?"
+- "Are there variables that are reserved for Unity? How can I utilize them?" 
 
 ## What you can find here
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find

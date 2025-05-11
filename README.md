@@ -14,7 +14,7 @@ Whats the difference? Which keywords can I use?"
 ## What you can find here
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
 - A brief introduction into the shader 
-- [References for ShaderLab syntax](./ShaderLab)
+- [References for ShaderLab syntax](./ShaderLab/About.md)
 - References for HLSL syntax
 - References for keywords used by Unity
 - A more detailed view into every Unity Graphics file

@@ -15,4 +15,10 @@ Unity uses special keywords for default solid-colored textures:
 - “bump” (0.5, 0.5, 1, 1)
 - anything else defaults to "gray"
 
-Make sure you added the empty curly brackets after the keyword! 
+Make sure you added the empty curly brackets after the keyword!
+
+Applicable [attributes](../Attributes/About.md):
+
+- ```[HideInInspector]```
+- ```[Normal]```
+- ```[PerRendererData]```

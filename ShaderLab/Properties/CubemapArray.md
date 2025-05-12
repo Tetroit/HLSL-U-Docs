@@ -7,3 +7,6 @@ Defines a cubemap array
 ```C#
 _VarName ("InspectorName", CubeArray) = "default_texture_keyword" {}
 ```
+Applicable [attributes](../Attributes/About.md):
+
+- ```[HideInInspector]```

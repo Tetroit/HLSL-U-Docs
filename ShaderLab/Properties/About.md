@@ -2,7 +2,7 @@
 <h2 align="center">Properties in ShaderLab</h2>
 
 ### Also see [Unity documentation](https://docs.unity3d.com/Manual/SL-Properties.html) on this topic
-ShaderLab allows a lot of customization for properties from your materials.
+ShaderLab allows a lot of customization for properties from your materials. The syntax goes as follows:
 ```C#
 [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
 //     |        |        |       |        |
@@ -10,6 +10,7 @@ ShaderLab allows a lot of customization for properties from your materials.
 //       Name in shader  |          Default value
 //                  Name in inspector
 ```
+[Attributes](../Attributes/About.md) are optional but allows to tell the compiler more about the properties given.
 > [!TIP]
 > Some tips to begin with!  
 >

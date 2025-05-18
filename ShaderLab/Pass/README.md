@@ -1,4 +1,4 @@
-[<- Back to ShaderLab info](../About.md)
+[<- Back to ShaderLab info](../README.md)
 <h2 align="center">Pass</h2>
 
 ### Also see [Unity documentation](https://docs.unity3d.com/Manual/SL-Pass.html) on this topic
@@ -15,7 +15,7 @@ Applicable Tags:
 | Tag | Description | Values |
 | --- | --- | --- |
 | LightMode | Tells Unity how to interpret this pass and what will be the output. Keep in mind, different pipelines support different values | Refer to the [LightMode](./LightMode.md) page for more info |
-| UniversalMaterialType | 
+| UniversalMaterialType | Used with Deferred Rendering, Unity marks pixels with the given material type in stencil |  ```"Lit"``` (PBR lighting), ```"SimpleLit"``` (Blinn-Phong lighting) |
 
 
 Usage example:  

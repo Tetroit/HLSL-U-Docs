@@ -30,7 +30,7 @@ Here is a brief breakdown:
 - **Shader** is the general keyword indicating the beginning of the shader, followed by your shader name.  
 - [**Properties**](./Properties/README.md) define which global variables will be used for the shader.
 - [**SubShader**](./SubShader/README.md) defines main structure of the shader code itself, you can have multiple SubShaders to accommodate for different hardware.
-    - [**Tags**](./SubShader/README.md/#tags-for-subshader) allows to define the behaviour of the shader
+    - [**Tags**](./SubShader/README.md/#tags-for-subshader) allows to define the behaviour of the shaderp
     - **LOD (Level Of Detail)** indicates whether this SubShader should be used according to the level of detail of the object, you can create multiple same-purpose SubShaders but for different levels of details.  
     Is set to 300 by default.
     - [**Pass**](./Pass/README.md) wraps all info README a specific rendering place at which your shader code will be called. 1 pass per draw call to put it simpler. For example, you will have one pass for forward rendering another for rendering shadow maps.

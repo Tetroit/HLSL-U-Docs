@@ -16,7 +16,7 @@ Many of these and other issues and hidden tricks will be explorred here.
 ## What you can find here
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
 - A brief introduction into the shader programming in Unity
-- [References for ShaderLab syntax](./ShaderLab/About.md)
-- [References for HLSL](./HLSL/About.md) syntax
+- [References for ShaderLab](./ShaderLab/About.md)
+- [References for HLSL](./HLSL/About.md)
 - References for keywords used by Unity
 - A more detailed view into Unity Graphics methods and structures

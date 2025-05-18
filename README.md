@@ -1,5 +1,6 @@
 # HLSL-U-Docs
-This repository is NOT official and is community driven. Contributions are very welcome! If you wish to contribute please see [reference]
+This repository is NOT official and is community driven. Contributions are very welcome! If you wish to contribute please see [Contribution]() page.
+Its main target is to provide a reference base for ShaderLab and HLSL for **Unity's Universal Rendering Pipeline**. (Built-In and HDRP might be added in the future)
 
 ## Why?
 If you once looked into Unity's ShaderLab/HLSL/ documentation it almost surely raised a lot of questions   
@@ -16,6 +17,6 @@ Many of these and other issues and hidden tricks will be explorred here.
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
 - A brief introduction into the shader programming in Unity
 - [References for ShaderLab syntax](./ShaderLab/About.md)
-- References for HLSL syntax
+- [References for HLSL](./HLSL/About.md) syntax
 - References for keywords used by Unity
 - A more detailed view into Unity Graphics methods and structures

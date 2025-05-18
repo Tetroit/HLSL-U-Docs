@@ -1,8 +1,8 @@
-[<- Back to ShaderLab info](../About.md)
+[<- Back to ShaderLab info](../README.md)
 <h2 align="center">Unity ShaderLab</h2>
 
 ### Also see [Unity documentation](https://docs.unity3d.com/Manual/SL-Properties.html) on this topic  
-### Also see [Properties](../Properties/About.md)
+### Also see [Properties](../Properties/README.md)
 
 ShaderLab Attributes work pretty much exactly as in C#. To use them, just prepend your property with the syntax. Here is a list of attributes:
 

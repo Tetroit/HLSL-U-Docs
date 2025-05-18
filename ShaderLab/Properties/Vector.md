@@ -1,4 +1,4 @@
-[<- Back to Properties](./About.md)
+[<- Back to Properties](./README.md)
 
 <h2 align = "center">Vector property</h2>
 
@@ -15,9 +15,9 @@ _VarName ("InspectorName", Vector) = (0.0, 0.0, 0.0, 0.0)
 //or
 _VarName ("InspectorName", Vector) = (0.0, 0.0, 0.0)
 ```
-Basically same as [**Color**](./Color.md), but shows like 4 values in the inspector
+Basically same as [**Color**](./Color.md), but shows like 4 values in the inspector.
 Default value is given as a 3-component (without alpha, alpha defaults to ```1.0```) or with 4-component (with alpha) set of floats between round brackets.
 
-Applicable [attributes](../Attributes/About.md):
+Applicable [attributes](../Attributes/README.md):
 
 - ```[HideInInspector]```

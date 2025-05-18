@@ -1,4 +1,4 @@
-[<- Back to Properties](./About.md)
+[<- Back to Properties](./README.md)
 
 <h2 align = "center">CubemapArray property</h2>
 
@@ -7,6 +7,6 @@ Defines a cubemap array
 ```C#
 _VarName ("InspectorName", CubeArray) = "default_texture_keyword" {}
 ```
-Applicable [attributes](../Attributes/About.md):
+Applicable [attributes](../Attributes/README.md):
 
 - ```[HideInInspector]```

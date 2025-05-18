@@ -1,4 +1,4 @@
-[<- Back to Properties](./About.md)
+[<- Back to Properties](./README.md)
 
 <h2 align = "center">Integer property</h2>
 
@@ -16,6 +16,6 @@ _VarName ("InspectorName", Int) = 0
 ```
 Was backed up by float before 2021
 
-Applicable [attributes](../Attributes/About.md):
+Applicable [attributes](../Attributes/README.md):
 
 - ```[HideInInspector]```

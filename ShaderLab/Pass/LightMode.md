@@ -1,4 +1,4 @@
-[<- Back to Pass block info](./About.md)
+[<- Back to Pass block info](./README.md)
 <h2 align="center">LightMode tag</h2>
 
 **LightMode** tag is a Pass tag, which allows you to tell compiler where in the rendering order your Pass is. it uses default rendering pipeline structure as reference, so values of this tag are also defined by your rendering pipeline.
@@ -18,7 +18,7 @@
 | DepthNormalsOnly | AKA DepthNormals, renders depth and normals from camera perspective | 10.0+ |
 | Motion Vectors | Renders motion vectors, more info [here](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@16.0/manual/features/motion-vectors.html#motion-vectors-in-shaderlab) | 16.0+ |
 
-This tag is very similar to [Queue SubShader tag](../SubShader/About.md/#tags-for-subshader), which defines which geometry is rendered first. You may think of it as a different low level superqueue. The main difference is that Queue only sorts geometry independantly from passes, while Passes define in which order and how geometry is rendered overall, same geometry can be rendered multiple times as well. It is more clear in an example:
+This tag is very similar to [Queue SubShader tag](../SubShader/README.md/#tags-for-subshader), which defines which geometry is rendered first. You may think of it as a different low level superqueue. The main difference is that Queue only sorts geometry independantly from passes, while Passes define in which order and how geometry is rendered overall, same geometry can be rendered multiple times as well. It is more clear in an example:
 
 Consider 3 shaders with the following structure:
 ```C#

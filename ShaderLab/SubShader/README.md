@@ -1,4 +1,4 @@
-[<- Back to ShaderLab info](../About.md)
+[<- Back to ShaderLab info](../README.md)
 <h2 align="center">SubShader</h2>
 
 ### Also see [Unity documentation](https://docs.unity3d.com/Manual/SL-SubShader.html) on this topic

@@ -1,4 +1,4 @@
-[<- Back to HLSL info](../About.md)
+[<- Back to HLSL info](../README.md)
 <h2 align="center">Native HLSL</h2>
 
 HLSL is developped by Microsoft, originally for DirectX. And all its topics are covered properly, so here are some of the most relevant topics to start HLSL programming in Unity:

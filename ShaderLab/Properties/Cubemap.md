@@ -1,4 +1,4 @@
-[<- Back to Properties](./About.md)
+[<- Back to Properties](./README.md)
 
 <h2 align = "center">Cubemap property</h2>
 
@@ -17,7 +17,7 @@ Unity uses special keywords for default solid-colored textures:
 
 Make sure you added the empty curly brackets after the keyword!
 
-Applicable [attributes](../Attributes/About.md):
+Applicable [attributes](../Attributes/README.md):
 
 - ```[HideInInspector]```
 - ```[Normal]```

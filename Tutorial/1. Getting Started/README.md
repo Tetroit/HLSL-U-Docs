@@ -1,3 +1,6 @@
+[<- Back to Tutorial info](../README.md)
+<h2 align="center">Part 1. Flat color shader</h2>
+
 To start with, here are some stats and versions that will be used in this tutorial
 
 - Unity: 2022.3 

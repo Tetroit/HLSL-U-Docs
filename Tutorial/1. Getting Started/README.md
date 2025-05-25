@@ -211,6 +211,7 @@ Watch out for the spelling, since Unity has its own naming conventions for packa
 This file includes other necessary files from the ShaderLibrary, so we do not need to include them.
 
 From here we will define 2 functions, which will be vertex stage and fragment stage. If you are unfamiliar with shader structure, please check this article on [Learn OpenGL](https://learnopengl.com/Getting-started/Hello-Triangle).
+
 ![shader structure image](https://learnopengl.com/img/getting-started/pipeline.png)
 
 What we need to do is

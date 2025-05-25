@@ -23,6 +23,7 @@ Applicable Tags:
 | --- | --- | --- |
 | RenderPipeline | Tells Unity whether the subshader is compatible with URP or HDRP. | ```"UniversalPipeline"```, ```"HDRenderPipeline"``` |
 | Queue | Tells unity at which point in the rendering queue to render the geometry will be executed.  | ```"Background"```, ```"Geometry"```, ```"AlphaTest"```, ```"Transparent"```, ```"Overlay"```, ```<any integer>```.  Values can also add integers for different results, for example: ```"Geometry" + 1```|
+| RenderType | Set the RenderType value for this SubShader. Not used in rendering, is used for editors and ShaderGraph | Any value, but `"Background"`, `"Opaque"`, `"Transparent"`, `"Overlay"` are used by Unity. |
 | ForceNoShadowCasting | Disables all shadows cast by this subshader | ```"True"```, ```"False"``` |
 | DisableBatching | Disables GPU instancing (batching) for all geometry with this subshader | ```"True"```, ```"False"```, ```"LODFading"``` |
 | IgnoreProjector | Geometry will be ignored by Projector component | ```"True"```, ```False``` |

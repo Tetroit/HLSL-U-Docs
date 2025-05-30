@@ -1,4 +1,10 @@
 [<- Back to Tutorial info](../README.md)
+
+<nav style="display: flex; flex-wrap: wrap; justify-content: space-around; font-size: 20px;">
+<p style = "text-decoration: underline">1. Getting started</p>
+<a href = "../2.%20Lighting/README.md">2. Lighting</a>
+</nav>
+
 <h2 align="center">Part 1. Flat color shader</h2>
 
 To start with, here are some stats and versions that will be used in this tutorial
@@ -370,7 +376,7 @@ Here is full resulting code from this chapter:
 - [Forward Pass file](./MyLitForwardPass.hlsl)
 
 ### Practice
-If you are not sure if you understood everything or just want to go deeper in the subjects discussed in this chapter, you may try these practice tasks:
+If you are not sure if you understood everything or just want to go deeper in the subjects discussed in this chapter, you may try these little practical tasks:
 
 1. What do you think will happen if in fragment shader you return `fragInput.positionCS`? Try it out yourself. Why does it happen to look so bright?
 2. Make a new `_Offset` property as Vector and try to translate your object by this vector using vertex shader. (You will need vertex shader for this)

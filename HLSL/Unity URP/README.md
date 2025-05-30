@@ -4,6 +4,10 @@
 <h1 align="center">URP ShaderLibrary</h1>
 
 ## Files
-### [Core.hlsl](./Files/Core.hlsl.md)
-### [Lighting.hlsl](./Files/Lighting.hlsl.md)
-### [ShaderVariablesFunction.hlsl](./Files/ShaderVariablesFunction.hlsl.md)
+
+### Shader Library:
+- ### [Core.hlsl](./Files/Core.hlsl.md)
+- ### [Lighting.hlsl](./Files/Lighting.hlsl.md)
+- ### [ShaderVariablesFunctions.hlsl](./Files/ShaderVariablesFunctions.hlsl.md)
+- ### [Input.hlsl](./Files/Input.hlsl.md)
+- ### [SurfaceData.hlsl](./Files/SurfaceData.hlsl.md)

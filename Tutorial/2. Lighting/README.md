@@ -168,7 +168,7 @@ float4 frag(Interpolators fragInput) : SV_Target
 	inputData.normalWS = fragInput.normalWS;
 	inputData.positionWS = fragInput.positionWS;
 	inputData.positionCS = fragInput.positionCS;
-	inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(fragInput.positionWS);
+	inputData.viewDirectionWS = float3 GetWorldSpaceNormalizeViewDir(fragInput.positionWS);
 	
 	//Surface structure
 	SurfaceData surfaceData = (SurfaceData)0;
@@ -183,14 +183,15 @@ float4 frag(Interpolators fragInput) : SV_Target
 Basically, we did all the same steps as previously with position: Get normal in `Vertex` struct, get world space normal through vertex shader and pass to fragment shader through `Interpolators`. There are a couple things worth noticing though:
 
 - in `Vertex` normal vector is marked with `NORMAL` semantic tag.
-- since normals are needed in world space we cannot assign any specific semantic tag to it, the way to pass it is to attach a `TEXCOORD(n)` tag to it, number doesnt matter as long as you don't use it more than once.
+- since normals are needed in world space we cannot assign any specific semantic tag to it, the way to pass it is to attach a `TEXCOORD(n)` tag to it, number doesn't really matter as long as you don't use it more than once.
 - the same trick was performed to get `positionWS` to fragment shader as well.
-- in vertex shader, there is a similar function to position that allows to transform normal from object to world space [GetVertexNormalInputs](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetVertexNormalInputs). It returns a [VertexNormalInputs](/HLSL/Unity%20URP/Files/Core.hlsl.md#VertexNormalInputs)
+- in vertex shader, there is a similar function to position that allows to transform normal from object to world space [GetVertexNormalInputs](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetVertexNormalInputs). It returns a [VertexNormalInputs](/HLSL/Unity%20URP/Files/Core.hlsl.md#VertexNormalInputs).
+- current view direction can be obtained with [GetWorldSpaceNormalizeViewDir](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetWorldSpaceNormalizeViewDir).
 
 
-On the scene it will still remain black, that is because all lights in our scene are **baked**, so in order to see changes we need to rebake the entire scene, which is not what we will do, instead, we will just add another directional light and will make it **realtime**
+On the scene it will still remain black, that is because all lights in our scene are **baked**, so in order to see changes we need to rebake the entire scene, which is not what we will do, instead, we will just add another directional light and will make it **realtime**.
 
-> [!NOTE]
+> [!TIP]
 > You can think of baked lighing as a frozen pizza: we do all hard work prior and freeze it, so then when needed we can quickly get a good quality result. Light is baked into so called **lighmaps**, then on runtime they are applied as textures. One limitation is that it only works with **static** lights and objects.
 
 ## Extras

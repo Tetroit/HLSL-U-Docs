@@ -5,7 +5,8 @@
 
 ### See Unity [source](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl) on Github
 
-Contains a surface template structure used for PBR and Blinn-Phong lighting, exists since 2021.
+## Variables
+
 ## Structs
 
 ### InputData

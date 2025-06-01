@@ -372,8 +372,11 @@ This concludes the first part, the next topic covers why and how to actually uti
 ### Code
 
 Here is full resulting code from this chapter:
-- [Shader file](./MyLit.shader)
-- [Forward Pass file](./MyLitForwardPass.hlsl)
+
+|---- [MyLit.shader](./MyLit.shader)  
+|---- HLSL  
+&emsp;&emsp;|---- Passes  
+&emsp;&emsp;&emsp;&emsp;|---- [MyLitForwardPass.hlsl](./MyLitForwardPass.hlsl)
 
 ### Practice
 If you are not sure if you understood everything or just want to go deeper in the subjects discussed in this chapter, you may try these little practical tasks:

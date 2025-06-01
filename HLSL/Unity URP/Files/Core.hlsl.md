@@ -8,11 +8,10 @@
 
 ## Structs
 
-### VertexPositioninputs
+### VertexPositionInputs
 
 Is used to represent position in different coordinate systems.
 
-Syntax:
 ```C++
 struct VertexPositionInputs
 {
@@ -22,12 +21,11 @@ struct VertexPositionInputs
     float4 positionNDC;// Homogeneous normalized device coordinates
 };
 ```
-### VertexNormalinputs
+### VertexNormalInputs
 
-Is used to represent normal info.
+Is used to represent normal info in world space.
 
-Syntax:
-```C=+
+```C++
 struct VertexNormalInputs
 {
     real3 tangentWS;

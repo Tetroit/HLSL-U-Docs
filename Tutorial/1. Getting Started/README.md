@@ -21,7 +21,12 @@ So let's hop on the scene and get started!
 ### Setup
 
 > [!IMPORTANT] 
-> **If on URP Sample**, there is one optimization that should be turned off for the beginning. Go to the project settings `Edit -> Project Settings` and select `Quality` tab. In `Rendering -> Rendering Pipeline Assets` you will find a currently used render pipeline asset. Double-click it to see it in inspector. On the very top there is a list of renderers `Rendering -> Renderer List`. Double-click the one that is set to default and make sure `Rendering -> Depth Priming Mode` is set to `Disabled`. This optimization makes Unity skip rendering depending on depth buffer. Since we will not use it for the beginning, our objects will simply not render if this option is on.
+> **If on URP Sample**, there is one optimization that should be turned off for the beginning. 
+> 1. Select current renderer.
+>    - Go to the project settings `Edit -> Project Settings` and select `Quality` tab. In `Rendering -> Rendering Pipeline Assets` you will find a currently used render pipeline asset. 
+>    - Double-click it to see it in inspector. On the very top there is a list of renderers `Rendering -> Renderer List`. 
+>    - Double-click the one that is set to default.
+> 2. Make sure `Rendering -> Depth Priming Mode` is set to `Disabled`. This optimization makes Unity skip rendering depending on depth buffer. Since we will not use it for the beginning, our objects will simply not render if this option is on.
 
 Go to `Assets -> Scenes -> Garden -> Garden Scene`
 
@@ -354,12 +359,18 @@ ENDHLSL
 Now we can finally behold the result in Unity! Right-click your shader in Unity `Create -> Material`. This will create a material and automatically assign your shader to it. You should be able to see a white circle in preview and a color property in the Inspector, which you can tweak and see your object changing color.
 ![](/src/images/Shader%20Result%20Tutorial1.png)
 
-If something goes wrong you can analyse what is missing in the **frame debugger**! At this point you should be able to see your objects being rendered in `DrawOpaqueObjects -> RenderLoop.Draw`. You can see all the details about it, such as:
+If something goes wrong you can analyse what is missing in the **frame debugger**! 
+
+> [!IMPORTANT]
+> Make sure your **game camera** is seeing the object! Otherwise Unity will optimize out the draw call due to object being out of frustum.
+
+At this point you should be able to see your objects being rendered in `DrawOpaqueObjects -> RenderLoop.Draw`.  You can see all the details about it, such as:
 - Which shader is used.
 - The name of your pass (as we set earlier).
 - Under `Vectors` you will also see a `_Color` entry.
 
 And a lot more...
+Do not break your mind why other objects are rendered in DrawSRPBatcher and yours not, it is completely normal, but we will get to that in the following chapters.
 
 ![](/src/images/Frame%20Debugger%20Tutorial1.png)
 

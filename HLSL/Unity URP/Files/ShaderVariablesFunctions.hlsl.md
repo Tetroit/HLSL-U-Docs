@@ -5,6 +5,8 @@
 
 ### See Unity [source](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl) on Github
 
+## Defines
+
 ## Includes
 
 ## Structs
@@ -12,6 +14,7 @@
 ## Constants and variables
  - `const kSurfaceTypeOpaque = 0.0;`
  - `const kSurfaceTypeTransparent = 1.0;`
+
 ## Functions
 
 - [GetVertexPositionInputs](#getvertexpositioninputs)
@@ -30,6 +33,27 @@
 - [IsAlphaToMaskAvailable](#isalphatomaskavailable)
 - [SharpenAlphaStrict](#sharpenalphastrict)
 - [AlphaClip](#alphaclip)
+- [AlphaDiscard](#alphadiscard)
+- [OutputAlpha](#OutputAlpha)
+- [AlphaModulate](#AlphaModulate)
+- [AlphaPremultiply](#alphapremultiply)
+- [NormalizeNormalPerVertex](#NormalizeNormalPerVertex)
+- [NormalizeNormalPerPixel](#NormalizeNormalPerPixel)
+- [ComputeFogFactorZ0ToFar](#ComputeFogFactorZ0ToFar)
+- [ComputeFogFactor](#ComputeFogFactor)
+- [ComputeFogIntensity](#ComputeFogIntensity)
+- [InitializeInputDataFog](#InitializeInputDataFog)
+- [MixFogColor](#MixFogColor)
+- [MixFog](#mixfog)
+- [LinearDepthToEyeDepth](#LinearDepthToEyeDepth)
+- [TransformScreenUV](#TransformScreenUV)
+- [TransformNormalizedScreenUV](#TransformNormalizedScreenUV)
+- [GetNormalizedScreenSpaceUV](#GetNormalizedScreenSpaceUV)
+- [Select4](#Select4)
+- [GetMeshRenderingLayer](#GetMeshRenderingLayer)
+- [EncodeMeshRenderingLayer](#EncodeMeshRenderingLayer)
+- [GetCurrentExposureMultiplier](#GetCurrentExposureMultiplier)
+
 
 ### GetVertexPositionInputs
 Performs Transforms to world, view and clip space from the gived coordinate in Object space.
@@ -417,5 +441,597 @@ half AlphaClip(half alpha, half cutoff)
     clip(clipVal);
 
     return outputAlpha;
+}
+```
+
+---
+### AlphaDiscard
+
+Terminates the current invocation if the input alpha value is below the specified cutoff value and returns an updated alpha value otherwise. You should call this method to properly clip pixels.
+
+> [!IMPORTANT]
+> `_ALPHATEST_ON` must be defined.
+
+Arguments:
+- **real** alpha - input alpha value
+- **real** cutoff - pixels with alpha below this value will be clipped
+- **real** offset - is just added to cutoff, kinda stupid
+
+Returns:
+- **real** - a modified alpha value if alphaMask is available 
+
+```cpp
+// Terminates the current invocation if the input alpha value is below the specified cutoff value and returns an updated alpha value otherwise.
+// When provided, the offset value is added to the cutoff value during the comparison logic.
+// The return value from this function should be exported as the final alpha value in fragment shaders so it can be combined with the MSAA coverage mask.
+//
+// When _ALPHATEST_ON is defined:     The returned value follows the behavior noted in the AlphaClip function
+// When _ALPHATEST_ON is not defined: The returned value is equal to the original alpha input parameter
+//
+// NOTE: When _ALPHATEST_ON is not defined, this function is effectively a no-op.
+real AlphaDiscard(real alpha, real cutoff, real offset = real(0.0))
+{
+#if defined(_ALPHATEST_ON)
+    if (IsAlphaDiscardEnabled())
+        alpha = AlphaClip(alpha, cutoff + offset);
+#endif
+
+    return alpha;
+}
+```
+
+---
+### OutputAlpha
+
+Returns alpha of the current surface, works with all types of surfaces. Basically returns input value if the surface is transparent.
+
+Arguments:
+- **half** alpha - input alpha value
+- **bool** isTransparent - if the surface transparent
+
+Returns:
+- **real** - 1 if surface is opaque, alpha otherwise
+
+```cpp
+half OutputAlpha(half alpha, bool isTransparent)
+{
+    if (isTransparent)
+    {
+        return alpha;
+    }
+    else
+    {
+#if defined(_ALPHATEST_ON)
+        // Opaque materials should always export an alpha value of 1.0 unless alpha-to-coverage is available
+        return IsAlphaToMaskAvailable() ? alpha : 1.0;
+#else
+        return 1.0;
+#endif
+    }
+}
+```
+
+---
+### AlphaModulate
+Fake alpha for multiply blend by lerping albedo towards 1 (white) using alpha.
+
+Arguments:
+- **half3** albedo - input color value
+- **half** alpha - input alpha value
+
+Returns:
+- **half3** - interpolated value between albedo and white depending on alpha
+
+```cpp
+half3 AlphaModulate(half3 albedo, half alpha)
+{
+    // Fake alpha for multiply blend by lerping albedo towards 1 (white) using alpha.
+    // Manual adjustment for "lighter" multiply effect (similar to "premultiplied alpha")
+    // would be painting whiter pixels in the texture.
+    // This emulates that procedure in shader, so it should be applied to the base/source color.
+#if defined(_ALPHAMODULATE_ON)
+    return lerp(half3(1.0, 1.0, 1.0), albedo, alpha);
+#else
+    return albedo;
+#endif
+}
+```
+
+---
+### AlphaPremultiply
+Is used for premultiply alpha blending. Multiplies albedo by alpha if `_ALPHAPREMULTIPLY_ON` is defined
+
+Arguments:
+- **half3** albedo - input color value
+- **half** alpha - input alpha value
+
+Returns:
+- **half3** - multiplied albedo value
+
+```cpp
+half3 AlphaPremultiply(half3 albedo, half alpha)
+{
+    // Multiply alpha into albedo only for Preserve Specular material diffuse part.
+    // Preserve Specular material (glass like) has different alpha for diffuse and specular lighting.
+    // Logically this is "variable" Alpha blending.
+    // (HW blend mode is premultiply, but with alpha multiply in shader.)
+#if defined(_ALPHAPREMULTIPLY_ON)
+    return albedo * alpha;
+#endif
+    return albedo;
+}
+```
+
+---
+### NormalizeNormalPerVertex
+
+Normalizes vertex normal (for vertex shader)
+
+Arguments:
+- **half3**/**float3** normalWS - normal in world space
+
+Returns:
+- **half3**/**float3** - normalized normal in world space
+
+
+```cpp
+// Normalization used to depend on SHADER_QUALITY
+// Currently we always normalize to avoid lighting issues
+// and platform inconsistencies.
+half3 NormalizeNormalPerVertex(half3 normalWS)
+{
+    return normalize(normalWS);
+}
+
+float3 NormalizeNormalPerVertex(float3 normalWS)
+{
+    return normalize(normalWS);
+}
+```
+
+---
+### NormalizeNormalPerPixel
+
+Normalizes fragment normal (for fragment shader)
+
+Arguments:
+- **half3**/**float3** normalWS - normal in world space
+
+Returns:
+- **half3**/**float3** - normalized normal in world space
+
+```cpp
+half3 NormalizeNormalPerPixel(half3 normalWS)
+{
+// With XYZ normal map encoding we sporadically sample normals with near-zero-length causing Inf/NaN
+#if defined(UNITY_NO_DXT5nm) && defined(_NORMALMAP)
+    return SafeNormalize(normalWS);
+#else
+    return normalize(normalWS);
+#endif
+}
+
+float3 NormalizeNormalPerPixel(float3 normalWS)
+{
+#if defined(UNITY_NO_DXT5nm) && defined(_NORMALMAP)
+    return SafeNormalize(normalWS);
+#else
+    return normalize(normalWS);
+#endif
+}
+```
+
+---
+### ComputeFogFactorZ0ToFar
+
+Computes fog from camera. `FOG_LINEAR_KEYWORD_DECLARED` should be defined
+
+Arguments:
+- **float** z - z position in camera space.
+
+Returns:
+- **real** - fog factor (how much a pixel should be interpolated to fog color).
+
+
+```cpp
+real ComputeFogFactorZ0ToFar(float z)
+{
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    if (FOG_LINEAR)
+    {
+        // factor = (end-z)/(end-start) = z * (-1/(end-start)) + (end/(end-start))
+        float fogFactor = saturate(z * unity_FogParams.z + unity_FogParams.w);
+        return real(fogFactor);
+    }
+    else if (FOG_EXP || FOG_EXP2)
+    {
+        // factor = exp(-(density*z)^2)
+        // -density * z computed at vertex
+        return real(unity_FogParams.x * z);
+    }
+    else
+    {
+        // This process is necessary to avoid errors in iOS graphics tests
+        // when using the dynamic branching of fog keywords.
+        return real(0.0);
+    }
+    #else // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    return real(0.0);
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+}
+```
+
+---
+### ComputeFogFactor
+
+Computes fog from clip space. `FOG_LINEAR_KEYWORD_DECLARED` should be defined
+
+Arguments:
+- **float** zPositionCS - z position in clip space [-1, 1] in world space
+
+Returns:
+- **real** - fog factor 
+
+```cpp
+real ComputeFogFactor(float zPositionCS)
+{
+    float clipZ_0Far = UNITY_Z_0_FAR_FROM_CLIPSPACE(zPositionCS);
+    return ComputeFogFactorZ0ToFar(clipZ_0Far);
+}
+```
+
+---
+### ComputeFogIntensity
+
+Computes fog intensity from factor. `FOG_LINEAR_KEYWORD_DECLARED` should be defined
+
+Arguments:
+- **half**/**float** fogFactor - z position in clip space [-1, 1] in world space
+
+Returns:
+- **half**/**float** - fog intensity (how much a pixel should be interpolated to fog color).
+
+```cpp
+half ComputeFogIntensity(half fogFactor)
+{
+    half fogIntensity = half(0.0);
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    if (FOG_EXP)
+    {
+        // factor = exp(-density*z)
+        // fogFactor = density*z compute at vertex
+        fogIntensity = saturate(exp2(-fogFactor));
+    }
+    else if (FOG_EXP2)
+    {
+        // factor = exp(-(density*z)^2)
+        // fogFactor = density*z compute at vertex
+        fogIntensity = saturate(exp2(-fogFactor * fogFactor));
+    }
+    else if (FOG_LINEAR)
+    {
+        fogIntensity = fogFactor;
+    }
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED
+    return fogIntensity;
+}
+```
+```cpp
+float ComputeFogIntensity(float fogFactor)
+{
+    float fogIntensity = 0.0;
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+        if (FOG_EXP)
+        {
+            // factor = exp(-density*z)
+            // fogFactor = density*z compute at vertex
+            fogIntensity = saturate(exp2(-fogFactor));
+        }
+        else if (FOG_EXP2)
+        {
+            // factor = exp(-(density*z)^2)
+            // fogFactor = density*z compute at vertex
+            fogIntensity = saturate(exp2(-fogFactor * fogFactor));
+        }
+        else if (FOG_LINEAR)
+        {
+            fogIntensity = fogFactor;
+        }
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    return fogIntensity;
+}
+```
+
+
+
+---
+### InitializeInputDataFog
+
+Computes fog factor from position in world space. `FOG_LINEAR_KEYWORD_DECLARED` should be defined. `vertFogFactor` is kinda useless because Unity forces fragment stage fog
+
+Arguments:
+- **float4** positionWS - pixel position in world space.
+- **real** vertFogFactor - factor from vertex shader, if fog is done in vertex sahder.   
+
+Returns:
+- **real** - fog intensity (how much a pixel should be interpolated to fog color).
+
+```cpp
+
+// Force enable fog fragment shader evaluation
+#define _FOG_FRAGMENT 1
+real InitializeInputDataFog(float4 positionWS, real vertFogFactor)
+{
+    real fogFactor = 0.0;
+#if defined(_FOG_FRAGMENT)
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    if (FOG_LINEAR || FOG_EXP || FOG_EXP2)
+    {
+        // Compiler eliminates unused math --> matrix.column_z * vec
+        float viewZ = -(mul(UNITY_MATRIX_V, positionWS).z);
+        // View Z is 0 at camera pos, remap 0 to near plane.
+        float nearToFarZ = max(viewZ - _ProjectionParams.y, 0);
+        fogFactor = ComputeFogFactorZ0ToFar(nearToFarZ);
+    }
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+#else // #if defined(_FOG_FRAGMENT)
+    fogFactor = vertFogFactor;
+#endif // #if defined(_FOG_FRAGMENT)
+    return fogFactor;
+}
+```
+
+---
+### MixFogColor
+
+Interpolates pixel color between actual color and fog depending on factor. (Calculates intensity first) `FOG_LINEAR_KEYWORD_DECLARED` should be defined.
+
+Arguments:
+- **half3**/**float3** fragColor - pixel position in world space.
+- **half3**/**float3** fogColor - fog color
+- **half**/**float**  vertFogFactor - factor from vertex shader, if fog is done in vertex sahder.   
+
+Returns:
+- **half3**/**float3** - mixed color.
+
+```cpp
+half3 MixFogColor(half3 fragColor, half3 fogColor, half fogFactor)
+{
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+        if (FOG_LINEAR || FOG_EXP || FOG_EXP2)
+        {
+            half fogIntensity = ComputeFogIntensity(fogFactor);
+            // Workaround for UUM-61728: using a manual lerp to avoid rendering artifacts on some GPUs when Vulkan is used
+            fragColor = fragColor * fogIntensity + fogColor * (half(1.0) - fogIntensity);    
+        }
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    return fragColor;
+}
+
+float3 MixFogColor(float3 fragColor, float3 fogColor, float fogFactor)
+{
+    #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+        if (FOG_LINEAR || FOG_EXP || FOG_EXP2)
+        {
+            if (IsFogEnabled())
+            {
+                float fogIntensity = ComputeFogIntensity(fogFactor);
+                fragColor = lerp(fogColor, fragColor, fogIntensity);
+            }
+        }
+    #endif // #if defined(FOG_LINEAR_KEYWORD_DECLARED)
+    return fragColor;
+} 
+```
+
+
+---
+### MixFog
+
+Same as [MixFogColor](#mixfogcolor).
+Interpolates pixel color between actual color and fog depending on factor. (Calculates intensity first) `FOG_LINEAR_KEYWORD_DECLARED` should be defined. Gets global fog color.
+
+Arguments:
+- **half3**/**float3** fragColor - pixel position in world space.
+- **half**/**float**  vertFogFactor - factor from vertex shader, if fog is done in vertex sahder.   
+
+Returns:
+- **half3**/**float3** - mixed color.
+
+
+```cpp
+half3 MixFog(half3 fragColor, half fogFactor)
+{
+    return MixFogColor(fragColor, half3(unity_FogColor.rgb), fogFactor);
+}
+
+float3 MixFog(float3 fragColor, float fogFactor)
+{
+    return MixFogColor(fragColor, unity_FogColor.rgb, fogFactor);
+}
+```
+---
+### LinearDepthToEyeDepth
+Transforms depth from linear normalized space [0, 1] to camera space [nearZ, farZ]. Interpolation is linear.
+
+Arguments:
+- **half**/**float**  rawDepth - clip space depth
+
+Returns:
+- **half**/**float** - camera space depth
+
+```cpp
+// Linear depth buffer value between [0, 1] or [1, 0] to eye depth value between [near, far]
+half LinearDepthToEyeDepth(half rawDepth)
+{
+    #if UNITY_REVERSED_Z
+        return half(_ProjectionParams.z - (_ProjectionParams.z - _ProjectionParams.y) * rawDepth);
+    #else
+        return half(_ProjectionParams.y + (_ProjectionParams.z - _ProjectionParams.y) * rawDepth);
+    #endif
+}
+
+float LinearDepthToEyeDepth(float rawDepth)
+{
+    #if UNITY_REVERSED_Z
+        return _ProjectionParams.z - (_ProjectionParams.z - _ProjectionParams.y) * rawDepth;
+    #else
+        return _ProjectionParams.y + (_ProjectionParams.z - _ProjectionParams.y) * rawDepth;
+    #endif
+}
+
+```
+---
+### TransformScreenUV
+
+Since different plaforms define UVs in different coordinates, Unity accommodates by implementing y-axis flip when needed.
+
+Arguments:
+- **float2** uv - initial UVs
+- **float** screenHeight - screen Y size
+
+Returns:
+- **float2** uv - changed UVs
+
+```cpp
+void TransformScreenUV(inout float2 uv, float screenHeight)
+{
+    #if UNITY_UV_STARTS_AT_TOP
+    uv.y = screenHeight - (uv.y * _ScaleBiasRt.x + _ScaleBiasRt.y * screenHeight);
+    #endif
+}
+
+void TransformScreenUV(inout float2 uv)
+{
+    #if UNITY_UV_STARTS_AT_TOP
+    TransformScreenUV(uv, GetScaledScreenParams().y);
+    #endif
+}
+```
+---
+### TransformNormalizedScreenUV
+
+Same as [TransformScreenUV](#TransformScreenUV) but sets height to 1.
+
+Arguments:
+- **float2** uv - initial UVs
+
+Returns:
+- **float2** uv - changed UVs
+
+```cpp
+void TransformNormalizedScreenUV(inout float2 uv)
+{
+    #if UNITY_UV_STARTS_AT_TOP
+    TransformScreenUV(uv, 1.0);
+    #endif
+}
+```
+---
+### GetNormalizedScreenSpaceUV
+
+Same as [TransformScreenUV](#TransformScreenUV) but sets height to 1.
+
+Arguments:
+- **float2**/**float4** positionCS - initial UVs
+
+Returns:
+- **float2** uv - changed UVs
+
+```cpp
+float2 GetNormalizedScreenSpaceUV(float2 positionCS)
+{
+    float2 normalizedScreenSpaceUV = positionCS.xy * rcp(GetScaledScreenParams().xy);
+    TransformNormalizedScreenUV(normalizedScreenSpaceUV);
+    return normalizedScreenSpaceUV;
+}
+
+float2 GetNormalizedScreenSpaceUV(float4 positionCS)
+{
+    return GetNormalizedScreenSpaceUV(positionCS.xy);
+}
+```
+---
+### Select4
+
+Selects i-th element from a 4-component array 
+
+Arguments:
+- **uint4** v - uint vector
+
+Returns:
+- **float2** uv - changed UVs
+
+```cpp
+// Select uint4 component by index.
+// Helper to improve codegen for 2d indexing (data[x][y])
+// Replace:
+// data[i / 4][i % 4];
+// with:
+// select4(data[i / 4], i % 4);
+uint Select4(uint4 v, uint i)
+{
+    // x = 0 = 00
+    // y = 1 = 01
+    // z = 2 = 10
+    // w = 3 = 11
+    uint mask0 = uint(int(i << 31) >> 31);
+    uint mask1 = uint(int(i << 30) >> 31);
+    return
+        (((v.w & mask0) | (v.z & ~mask0)) & mask1) |
+        (((v.y & mask0) | (v.x & ~mask0)) & ~mask1);
+}
+```
+---
+I don't know what this is but trust me you will not need it
+```cpp
+#if SHADER_TARGET < 45
+uint URP_FirstBitLow(uint m)
+{
+    // http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightFloatCast
+    return (asuint((float)(m & asuint(-asint(m)))) >> 23) - 0x7F;
+}
+#define FIRST_BIT_LOW URP_FirstBitLow
+#else
+#define FIRST_BIT_LOW firstbitlow
+#endif
+```
+---
+### GetMeshRenderingLayer
+
+Returns:
+- **uint** - Current rendering layer id.
+
+```cpp
+
+uint GetMeshRenderingLayer()
+{
+    return asuint(unity_RenderingLayer.x);
+}
+```
+---
+### EncodeMeshRenderingLayer
+
+Same as [GetMeshRenderingLayer](#GetMeshRenderingLayer)
+
+Returns:
+- **uint** - Current rendering layer id.
+
+```cpp
+uint EncodeMeshRenderingLayer()
+{
+    // Force any bits above max to be skipped
+    return GetMeshRenderingLayer() & _RenderingLayerMaxInt;
+}
+```
+### GetCurrentExposureMultiplier
+
+No implementation...
+
+```cpp
+// TODO: implement
+float GetCurrentExposureMultiplier()
+{
+    return 1;
 }
 ```

@@ -4,6 +4,13 @@ All URP code belongs to [Unity Technologies](https://github.com/Unity-Technologi
 
 Contributions are very welcome! If you wish to contribute please see [Contribution]() page.
 
+## What you can find here
+This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
+- [An introduction into the shader programming in Unity](./Tutorial/README.md);
+- [References for ShaderLab](./ShaderLab/README.md)
+- [References for HLSL](./HLSL/README.md)
+- References for keywords used by Unity
+- A more detailed view into Unity Graphics methods and structures
 
 ## Why?
 If you once looked into Unity's ShaderLab or HLSL documentation it almost surely raised a lot of questions such as
@@ -13,11 +20,4 @@ If you once looked into Unity's ShaderLab or HLSL documentation it almost surely
 - "Can I include other files in the shader? Where can I get Unity's HLSL source code?"
 - "Are there variables that are reserved for Unity? How can I utilize them?" 
 
-Many of these and other issues and hidden tricks will be explorred here.
-## What you can find here
-This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
-- [An introduction into the shader programming in Unity](./Tutorial/README.md);
-- [References for ShaderLab](./ShaderLab/README.md)
-- [References for HLSL](./HLSL/README.md)
-- References for keywords used by Unity
-- A more detailed view into Unity Graphics methods and structures
+Many of these and other issues and hidden tricks will be explored here (now or in the future).

@@ -114,8 +114,10 @@ However, if we look at our material it is just black, thats because inputData ne
 - normalWS
 - normalizedScreenSpaceUV
 - positionWS
+- viewDirectionWS
 - positionCS (recommended, but not mandatory)
-- viewDirectionWS (recommended, but not mandatory)
+
+See below for implementation and explanation
 
 To get normal data we need to first get it from geometry, so we need to modify the structure:
 
@@ -235,6 +237,7 @@ Pass {
 *MyLit.shader*
 
 After that is done, material in your scene should appear as something like this
+
 ![PBR material image](/src/images/PBR%20material%20Tutorial2.png)
 
 It should be lit from directional and nearby point lights.

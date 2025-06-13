@@ -5,9 +5,9 @@ Prerequisites:
 
 - Unity
 - Basic understanding of data oriented programming
-- Bonus: previous experience with shaders 
+- Bonus: previous experience with shaders, c++ or graphic APIs
 
-This section contains a step-by-step tutorial about shader programming using URP. As a first goal we will create a custom Lit shader, which is amazingly simple using URP toolset!
+This section contains a step-by-step tutorial about shader programming using URP. Since shaders have no limits, this tutorial is general purpose and will cover the creation of a custom lit shader (looks just like Unity's one). This way it is easier to understand the workflow and get a fascinating result, which is amazingly simple using URP toolset!
 
 ### Table of content
 

@@ -18,4 +18,6 @@ Was backed up by float before 2021
 
 Applicable [attributes](../Attributes/README.md):
 
-- ```[HideInInspector]```
+- `[HideInInspector]`
+- `[KeywordEnum(...)]`
+- `[Toggle]`

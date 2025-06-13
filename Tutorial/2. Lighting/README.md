@@ -3,10 +3,20 @@
 1. [Getting started](../1.%20Getting%20Started/README.md)
 2. Lighting
 
-<h2 align="center">Part 2. Flat color shader</h2>
+<h2 align="center">Part 2. Lighting</h2>
 
 This is a continuation of the [previous chapter](../1.%20Getting%20Started/README.md), where we've created a flat color shader, so if you did not look through it, I would highly recommend to do so, since in this chapter we will continue with the resulting code.
 
+Here we are going to go through:
+
+1. Recieving light\
+![](/src/images/Tutorial2%20Lights.png)
+2. Surface parameters\
+![](/src/images/Tutorial2%20Smoothness.png)
+3. Baked GI\
+![](/src/images/Tutorial2%20BakedGI.png)
+4. Texture\
+![](/src/images/Tutorial2%20Texture.png)
 ### Surface parameters
 
 I believe it is not a secret that lighting is a fairly complex topic and has a lot of aspects, so we will not go deep into details, but we will explore what each parameter does. First of all, there are 2 types of paramerers: **surface** and **input**
@@ -236,7 +246,7 @@ Pass {
 
 After that is done, material in your scene should appear as something like this
 
-![PBR material image](/src/images/PBR%20material%20Tutorial2.png)
+![PBR material image](/src/images/Tutorial2%20Lights.png)
 
 It should be lit from directional and nearby point lights.
 
@@ -287,7 +297,7 @@ surfaceData.metallic = _Metallic;
 
 You should get a pleasant reflection of the surrounding lights. 
 
-![](/src/images/Smooth%20metallic%20Tutorial2.png)
+![](/src/images/Tutorial2%20Smoothness.png)
 
 Let's add environment reflection as well!
 
@@ -397,7 +407,7 @@ To use the baked lighting we need to simply sample it and there is a very simila
 #endif
 ```
 
-Put the sampled GI into `inputData.bakedGI`. And, most importantly, **set `surfaceData.occlusion` to 1**. By default it is set to 0, which means all the ambient light, including reflections, is occluded (reduced to 0). Inside fragment shader now you have:
+Put the sampled GI into `inputData.bakedGI`. And, most importantly, **set `surfaceData.occlusion` to 1**. By default it is set to 0, which means all the ambient light, including reflections, is occluded (reduced to 0). Inside fragment shader now you will have:
 ```cpp
 	//Input structure
 	InputData inputData = (InputData)0;
@@ -408,7 +418,7 @@ Put the sampled GI into `inputData.bakedGI`. And, most importantly, **set `surfa
 	inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(fragInput.positionWS);
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(fragInput.positionCS);
     inputData.bakedGI = SAMPLE_GI(fragInput.staticLightmapUV, fragInput.vertexSH, fragInput.normalWS);
-    //inputData.shadowMask = SAMPLE_SHADOWMASK(fragInput.staticLightmapUV);
+
 	//Surface structure
 	SurfaceData surfaceData = (SurfaceData)0;
 
@@ -418,15 +428,106 @@ Put the sampled GI into `inputData.bakedGI`. And, most importantly, **set `surfa
 	surfaceData.metallic = _Metallic;
 	surfaceData.occlusion = 1.0;
 ```
-![old](/src/images/Smooth%20metallic%20Tutorial2.png)\
-*old*
-
-![new](/src/images/Baked%20GI%20Tutorial2.png)\
-*new*
+![BakedGI](/src/images/Tutorial2%20BakedGI.png)
 
 Looks much more coherent!
 
 For clearer view, set smoothness and metallic to 1 and you will see the surrounding like through a mirror!
+
+---
+
+### Textures
+
+The last piece of the puzzle is textures and maps, they are quite simple to set up, but there are a couple of nuances.
+
+Here is an [official page](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/writing-shaders-urp-unlit-texture.html?q=TEXTURE2D) about how to include textures in your shader. For newer versions (Unity 6000+) you can refer to [here](https://docs.unity3d.com/Manual/SL-SamplerStates.html).
+
+To get texture from the inspector define a [texture property](/ShaderLab/Properties/Texture2D.md):
+
+```cpp
+_MainTex ("Base Map", 2D) = "white" {}
+```
+
+It defaults to a white texture, but Unity provides multiple ones, such as "gray" or "black".
+
+> [!TIP]
+> Texture field already includes tiling and offset by default. If you want to get rid of it, use [NoScaleOffset attribute](/ShaderLab/Attributes/README.md)
+>
+> Add [MainTexture attribute](/ShaderLab/Attributes/README.md) if you want this texture to be accessible with `material.texture` (A texture with `_MainTex` name is automatically considered main);
+
+On HLSL side, a texture and a sampler is needed to be declared.\
+If you are unfamiliar with textures, briefly, texture is just pixels and sampler defines the rules about how to read data from these pixels (filtering, uv clamping, etc)  
+
+`Texture2D _MainTex` and `SamplerState sampler_MainTex` are valid initialization types for texture, but it is not recommended to use.\
+Use `TEXTURE2D(_MainTex)` and `SAMPLER(sample_MainTex)` instead. It is not a type, it is a macro. The reason is the former is only supported by DirectX, and the latter is cross platform, meaning these macros are defined for each platform individually. For DirectX it expands to [`Texture2D _MainTex`](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.core/ShaderLibrary/API/D3D11.hlsl#L49) and [`SamplerState sampler_MainTex`](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.core/ShaderLibrary/API/D3D11.hlsl#L79) correspondingly.
+
+For the tiling and offset float4 _MainText_ST is needed as well (xy - scale, zw - translate, so "ST" stands for Scale and Translate). It will be automatically hooked by Unity, so no need to worry about it.
+
+To apply the texture we need another piece of vertex data - UV. It is imported to Vertex struct with TEXCOORD0 tag. Since ytexture type is platform-dependant, sampling will also involve macros, for that we need:
+
+[`TRANSFORM_TEX(uv, name)`](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.core/ShaderLibrary/Macros.hlsl#L180) - simply applies tiling and offset, platform independent:
+```cpp
+#define TRANSFORM_TEX(tex, name) ((tex.xy) * name##_ST.xy + name##_ST.zw)
+```
+(*even though the comment says it is from legacy version, it is still majorly used by Unity, how thoughful*)
+
+[`SAMPLE_TEXTURE2D(textureName, samplerName, coord2)`](https://github.com/Unity-Technologies/Graphics/blob/master/Packages/com.unity.render-pipelines.core/ShaderLibrary/API/D3D11.hlsl#L122) - platform specific texture sampling:
+```cpp
+#define PLATFORM_SAMPLE_TEXTURE2D(textureName, samplerName, coord2)                               textureName.Sample(samplerName, coord2)
+#define SAMPLE_TEXTURE2D(textureName, samplerName, coord2)                               PLATFORM_SAMPLE_TEXTURE2D(textureName, samplerName, coord2)
+```
+This immplementation is **DirectX specific**
+
+\
+\
+Now to implementation:
+
+Adjust structs to support UVs
+```cpp
+//Vertex shader input
+struct Vertex
+{
+	//Position in object space as position input
+	float3 positionOS : POSITION;
+	//Normal in object space as normal input
+	float3 normalOS : NORMAL;
+	//UVs as texture coordinates #0 input
+	float2 UV : TEXCOORD0;
+};
+
+//Vertex shader output and fragment shader input
+struct Interpolators
+{
+	//Positions
+	float4 positionCS : SV_POSITION;
+	float3 positionWS : TEXCOORD0;
+	//Normals
+	float3 normalWS : TEXCOORD1;
+	//UVs
+	float2 UV : TEXCOORD2;
+	//GI data
+    DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 3);
+};
+```
+Set UVs in vertex shader:
+```cpp
+result.UV = vertInput.UV;
+```
+
+In fragment shader apply tiling and offset and sample the texture:
+```cpp
+float2 uv = TRANSFORM_TEX(fragInput.UV, _MainTex);
+float4 textureColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+
+surfaceData.albedo = _Color.rgb * textureColor;
+```
+For simplicity we will not apply complex blending, just use multiplication.
+
+In the end the texture should be applied properly with working tiling and offset:
+
+![](/src/images/Tutorial2%20Texture.png)
+
+We will dive deeper into different types of textures in the subsequent chapters.
 
 ## Extras
 

@@ -11,4 +11,5 @@ If you want to restrict the value between 2 constancts, for example to clamp it 
 
 Applicable [attributes](../Attributes/README.md):
 
-- ```[HideInInspector]```
+- `[HideInInspector]`
+- `[KeywordEnum(...)]`

@@ -7,29 +7,64 @@
 
 ## Defines
 
+- [DECLARE_LIGHTMAP_OR_SH](#DECLARE_LIGHTMAP_OR_SH)
+- [OUTPUT_LIGHTMAP_UV](#OUTPUT_LIGHTMAP_UV)
+- [OUTPUT_SH4](#OUTPUT_SH4)
+- [OUTPUT_SH](#OUTPUT_SH)
 
 ### DECLARE_LIGHTMAP_OR_SH
 
+Defines either lightmap (if lightmaps are on) or spherical harmonic for light probes
+
 ```cpp
 #if defined(LIGHTMAP_ON)
     #define DECLARE_LIGHTMAP_OR_SH(lmName, shName, index) float2 lmName : TEXCOORD##index
 #else
     #define DECLARE_LIGHTMAP_OR_SH(lmName, shName, index) half3 shName : TEXCOORD##index
+#endif
 ```
+
+### OUTPUT_LIGHTMAP_UV
+
+sets xy values of `OUT` to lightmap coordinates\
+(Only if `LIGHTMAP_ON` is defined)  
+
 ```cpp
 #if defined(LIGHTMAP_ON)
-    #define DECLARE_LIGHTMAP_OR_SH(lmName, shName, index) float2 lmName : TEXCOORD##index
     #define OUTPUT_LIGHTMAP_UV(lightmapUV, lightmapScaleOffset, OUT) OUT.xy = lightmapUV.xy * lightmapScaleOffset.xy + lightmapScaleOffset.zw;
-    #define OUTPUT_SH4(absolutePositionWS, normalWS, viewDir, OUT, OUT_OCCLUSION)
-    #define OUTPUT_SH(normalWS, OUT)
 #else
-    #define DECLARE_LIGHTMAP_OR_SH(lmName, shName, index) half3 shName : TEXCOORD##index
     #define OUTPUT_LIGHTMAP_UV(lightmapUV, lightmapScaleOffset, OUT)
+#endif
+```
+
+### OUTPUT_SH4
+
+Samples spherical harmonic.\
+(Only if `LIGHTMAP_ON` is undefined)
+
+Has different implementation for light probe group and adaptive probe volume.
+
+```cpp
+#if defined(LIGHTMAP_ON)
+    #define OUTPUT_SH4(absolutePositionWS, normalWS, viewDir, OUT, OUT_OCCLUSION)
+#else
     #ifdef USE_APV_PROBE_OCCLUSION
         #define OUTPUT_SH4(absolutePositionWS, normalWS, viewDir, OUT, OUT_OCCLUSION) OUT.xyz = SampleProbeSHVertex(absolutePositionWS, normalWS, viewDir, OUT_OCCLUSION)
     #else
         #define OUTPUT_SH4(absolutePositionWS, normalWS, viewDir, OUT, OUT_OCCLUSION) OUT.xyz = SampleProbeSHVertex(absolutePositionWS, normalWS, viewDir)
     #endif
+#endif
+```
+
+### OUTPUT_SH
+
+(Legacy)
+
+Simply samples GI in a given direction.
+
+```cpp
+    #define OUTPUT_SH(normalWS, OUT)
+#else
     // Note: This is the legacy function, which does not support APV.
     // Kept to avoid breaking shaders still calling it (UUM-37723)
     #define OUTPUT_SH(normalWS, OUT) OUT.xyz = SampleSHVertex(normalWS)

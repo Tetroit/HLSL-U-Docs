@@ -117,9 +117,9 @@ However, if we look at our material it is just black, thats because inputData ne
 - viewDirectionWS
 - positionCS (recommended, but not mandatory)
 
-See below for implementation and explanation
+See below for implementation and explanation.
 
-To get normal data we need to first get it from geometry, so we need to modify the structure:
+To get normal data we need to first get it from geometry, so we need to modify the structure like this:
 
 ```cpp
 //Vertex shader input
@@ -187,12 +187,12 @@ float4 frag(Interpolators fragInput) : SV_Target
 > [!NOTE]
 > We additionally normalize the normal vector to avoid feeding the engine with incorrect data, as the fragment value is **linearly interpolated**, not **spherically**.
 
-Basically, we did all the same steps as previously with position: Get normal in `Vertex` struct, get world space normal through vertex shader and pass to fragment shader through `Interpolators`. There are a couple things worth noticing though:
+Explanation:
 
 - in `Vertex` normal vector is marked with `NORMAL` semantic tag.
 - since normals are needed in world space we cannot assign any specific semantic tag to it, the way to pass it is to attach a `TEXCOORD(n)` tag to it, number doesn't really matter as long as you don't use it more than once.
 - the same trick was performed to get `positionWS` to fragment shader as well.
-- in vertex shader, there is a similar function to position that allows to transform normal from object to world space [GetVertexNormalInputs](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetVertexNormalInputs). It returns a [VertexNormalInputs](/HLSL/Unity%20URP/Files/Core.hlsl.md#VertexNormalInputs).
+- in vertex shader, there is a similar function to the position one that allows to transform normal from object to world space [GetVertexNormalInputs](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetVertexNormalInputs). It returns a [VertexNormalInputs](/HLSL/Unity%20URP/Files/Core.hlsl.md#VertexNormalInputs).
 - current view direction can be obtained with [GetWorldSpaceNormalizeViewDir](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetWorldSpaceNormalizeViewDir).
 
 

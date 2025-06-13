@@ -12,7 +12,7 @@ This section contains a step-by-step tutorial about shader programming using URP
 ### Table of content
 
 - [1. Getting Started](./1.%20Getting%20Started/README.md) - Creating a basic color shader
-- [2. Lighting]() - Creating lighting
+- [2. Lighting](./2.%20Lighting/README.md) - Creating lighting
 
 Here are also other excellent tutorials about Unity shader programming, check them out as well:
 

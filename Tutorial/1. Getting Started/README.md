@@ -226,7 +226,8 @@ This file includes other necessary files from the ShaderLibrary, so we do not ne
 
 From here we will define 2 functions, which will be vertex stage and fragment stage. If you are unfamiliar with shader structure, please check this article on [Learn OpenGL](https://learnopengl.com/Getting-started/Hello-Triangle).
 
-![shader structure image](https://learnopengl.com/img/getting-started/pipeline.png)
+![shader structure image](https://learnopengl.com/img/getting-started/pipeline.png)\
+(Image from learnopengl.com)
 
 What we need to do is
 1. Gather data from properties
@@ -303,7 +304,7 @@ I already put some beginning code, so let's have a look at it:
 > As you notice, here we use a [semantic tag](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics) after the function syntax. "SV_" prefix stands for [System-Value](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics#system-value-semantics), these semantic tags are built in and tell the internal pipeline what data we are providing to it. To put it simple, think of it as an "output field" tag. Position is also a tag but it [vertex shader only](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics#vertex-shader-semantics). You can also define your own semantic tags!  
 So in Vertex we marked the input field as `POSITION` and in Interpolators we marked it as `SV_POSITION` position output.
 
-3. vert: Unity already provides us with the necessary tools, so we don't need to worry about math hassle behind object to clip space transformation. [`GetVertexPositionInputs`]() is defined in [ShaderVariablesFunctions.hlsl](). It takes a point in **object space** and returns a [`VertexPositionInputs`]() struct. The struct has the following fields:
+3. vert: Unity already provides us with the necessary tools, so we don't need to worry about math hassle behind object to clip space transformation. [`GetVertexPositionInputs`](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md#GetVertexPositionInputs) is defined in [ShaderVariablesFunctions.hlsl](/HLSL/Unity%20URP/Files/ShaderVariablesFunctions.hlsl.md). It takes a point in **object space** and returns a [`VertexPositionInputs`](/HLSL/Unity%20URP/Files/Core.hlsl.md#VertexPositionInputs) struct. The struct has the following fields:
 
 *Taken from URP [Core.hlsl]()*
 ```C++

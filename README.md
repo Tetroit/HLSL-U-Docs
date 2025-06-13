@@ -6,7 +6,7 @@ Contributions are very welcome! If you wish to contribute please see [Contributi
 
 ## What you can find here
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
-- [An introduction into the shader programming in Unity](./Tutorial/README.md);
+- [An introduction into the shader programming in Unity](./Tutorial/README.md)
 - [References for ShaderLab](./ShaderLab/README.md)
 - [References for HLSL](./HLSL/README.md)
 - References for keywords used by Unity

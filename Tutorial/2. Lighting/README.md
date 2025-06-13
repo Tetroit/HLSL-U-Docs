@@ -527,15 +527,22 @@ In the end the texture should be applied properly with working tiling and offset
 
 ![](/src/images/Tutorial2%20Texture.png)
 
-We will dive deeper into different types of textures in the subsequent chapters.
+We will dive deeper into different types of textures in the subsequent chapters. But for now this is the end! Next step will be implementing shadows, transparency and more about shader variants.
 
 ## Extras
 
 ### Code
 
 Here is full resulting code from this chapter:
-- [Shader file](./MyLit.shader)
-- [Forward Pass file](./MyLitForwardPass.hlsl)
+
+|---- [MyLit.shader](./MyLit.shader)  
+|---- HLSL  
+&emsp;&emsp;|---- Passes  
+&emsp;&emsp;&emsp;&emsp;|---- [MyLitForwardPass.hlsl](./MyLitForwardPass.hlsl)
 
 ### Practice
 If you are not sure if you understood everything or just want to go deeper in the subjects discussed in this chapter, you may try these little practical tasks:
+
+1. Change the HLSL code so that _MainTex is used as smoothness, was the result what you expected?
+2. Try setting up other surface sliders and play with them, what will happen if you go beyond [0,1] range?
+3. Right now you define texture with 3 parameters: texture, sampler and tiling/offset. Create a macro that cteates all 3 parameters with 1 line (refer to [macros](#macros) section if needed).

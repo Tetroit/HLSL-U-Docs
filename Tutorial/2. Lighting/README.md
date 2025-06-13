@@ -1,9 +1,7 @@
 [<- Back to Tutorial info](../README.md)
 
-<nav style="display: flex; flex-wrap: wrap; justify-content: space-around; font-size: 20px;">
-<a href = "../1.%20Getting%20Started/README.md">1. Getting started</a>
-<p href = "../2.%20Lighting/README.md" style = "text-decoration: underline">2. Lighting</p>
-</nav>
+1. [Getting started](../1.%20Getting%20Started/README.md)
+2. Lighting
 
 <h2 align="center">Part 2. Flat color shader</h2>
 

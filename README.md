@@ -2,7 +2,8 @@
 This repository was created for educational purposes, is NOT official and is community driven.
 All URP code belongs to [Unity Technologies](https://github.com/Unity-Technologies/Graphics) and is referenced appropriately. Repository's main target is to provide a reference base for ShaderLab and HLSL for **Unity's Universal Rendering Pipeline**. (Built-In and HDRP might be added in the future)
 
-Contributions are very welcome! If you wish to contribute please see [Contribution]() page.
+Contributions are very welcome! If you wish to contribute please see [Contribution](./Contribution.md) page. The easiest way is\
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/tetroit)
 
 ## What you can find here
 This repo is created to help understand the workflow and opportunities offered by Unity Graphics. Here you can find
